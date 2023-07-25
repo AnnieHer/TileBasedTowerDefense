@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Pool;
 
 public class GridManager : MonoBehaviour
 {
@@ -8,14 +9,27 @@ public class GridManager : MonoBehaviour
     [SerializeField] private Tile tilePrefab;
     [SerializeField] private Transform gridParent;
     private Dictionary<Vector2, Tile> TileMap;
+    private int currentX, currentZ;
     private List<Vector2> path;
     public static GridManager Instance;
+    private ObjectPool<Tile> _pool;
+    [SerializeField] private bool _usePool;
     private void Awake() {
         Instance = this;
     }
     
 
     private void Start() {
+        _pool = new ObjectPool<Tile>(() => {
+            return Instantiate(tilePrefab);
+        }, Tile => {
+            Tile.gameObject.SetActive(true);
+        }, Tile => {
+            Tile.gameObject.SetActive(false);
+        }, Tile => {
+            Destroy(Tile.gameObject);
+        }, false, 1024, 4096);
+
         GenerateGrid();
     }
     public void SetX(string x) {
@@ -27,15 +41,18 @@ public class GridManager : MonoBehaviour
     public void SetTurns(string z) {
         amountOfTurns = int.Parse(z);
     }
+    public void UsePool(bool use) {
+        _usePool = use;
+    }
     public void GenerateGrid() {
-        
         TileMap = new Dictionary<Vector2, Tile>();
         Vector2 start = GetRandomPointOnEdge();
         Vector2 end = new Vector2(width - 1 - start.x, height - 1 - start.y);
 
         for (int x = 0; x < width; x++) {
             for (int z = 0; z < height; z++) {
-                Tile spawnedTile = Instantiate(tilePrefab, new Vector3(x, Random.Range(-0.2f, 0.2f), z), Quaternion.identity);
+                Tile spawnedTile = _usePool ? _pool.Get() : Instantiate(tilePrefab);
+                spawnedTile.transform.SetPositionAndRotation(new Vector3(x, Random.Range(-0.2f, 0.2f), z), Quaternion.identity);
                 spawnedTile.name = $"Tile {x} {z}";
                 spawnedTile.transform.SetParent(gridParent);
                 bool isOffset = (x + z) % 2 == 1;
@@ -44,6 +61,8 @@ public class GridManager : MonoBehaviour
                 TileMap[new Vector2(x, z)] = spawnedTile;   
             }
         }
+        currentX = width;
+        currentZ = height;
         CameraControls.Instance.Center(new Vector3(width/2,0,height/2));
         float distance = (((Mathf.Sqrt(width*width+height*height)) / 2) / Mathf.Tan(Camera.main.fieldOfView * (Mathf.PI/180)) / 2);
         CameraRotation.Instance.SetNewLimit(distance);
@@ -59,8 +78,15 @@ public class GridManager : MonoBehaviour
         GetTileByPosition(end).ChangeToEnd();
     }
     public void DestroyGrid() {
-        for (int i = 0; i < gridParent.childCount; i++) {
-            Destroy(gridParent.GetChild(i).gameObject);
+        for (int x = 0; x < currentX; x++) {
+            for (int z = 0; z < currentZ; z++) {
+                if (_usePool) {
+                _pool.Release(TileMap[new Vector2(x, z)]);
+                }
+                else {
+                Destroy(TileMap[new Vector2(x, z)].gameObject);
+                }
+            }
         }
     }
     public Tile GetTileByPosition(Vector2 pos) {
