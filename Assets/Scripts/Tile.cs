@@ -10,6 +10,7 @@ public class Tile : MonoBehaviour
     [SerializeField] private Material mainColour, offsetColour, pathColour, startColour, endColour;
     [SerializeField] private Renderer _renderer;
     [SerializeField] private GameObject highlighter;
+
     public void Init(bool isOffset) {
         _renderer.material = isOffset ? offsetColour : mainColour;
     }
@@ -21,7 +22,6 @@ public class Tile : MonoBehaviour
     }
     private void OnMouseEnter() {
         highlighter.SetActive(true);
-        Debug.Log(this);
         PlayerControls.instance.SendTile(this);
         selected = true;
     }
