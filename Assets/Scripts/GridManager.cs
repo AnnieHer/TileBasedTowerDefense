@@ -75,7 +75,7 @@ public class GridManager : MonoBehaviour
         path = GenerateRandomPath(points);
         ChangeTilesOnPath(path);
         GetTileByPosition(start).ChangeToStart();
-        GetTileByPosition(end).ChangeToEnd();
+        GetTileByPosition(end).ChangeToEnd();   
     }
     public void DestroyGrid() {
         for (int x = 0; x < currentX; x++) {
@@ -87,7 +87,7 @@ public class GridManager : MonoBehaviour
                 Destroy(TileMap[new Vector2(x, z)].gameObject);
                 }
             }
-        }
+        }  
     }
     public Tile GetTileByPosition(Vector2 pos) {
         if (TileMap.TryGetValue(pos, out Tile tile)) {
@@ -122,7 +122,7 @@ public class GridManager : MonoBehaviour
         }
         return new Vector2(x, z);
     }
-    private Vector2 GetRandomPointInGrid() {
+    public Vector2 GetRandomPointInGrid() {
         // Implement the logic to generate a random point within the grid bounds
         // You can use the width and height variables to define the grid bounds
         // For example:

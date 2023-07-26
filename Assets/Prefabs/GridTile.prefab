@@ -34,7 +34,7 @@ Transform:
   m_Children:
   - {fileID: 3110383012001628513}
   m_Father: {fileID: 0}
-  m_RootOrder: 0
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &1094207051540958786
 MeshFilter:
@@ -119,11 +119,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0183daf0ef2eb2b4f8fbf46604c76c9c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  selected: 0
   mainColour: {fileID: 2100000, guid: 7fe55b230fb7ba14488ca79ab3304f56, type: 2}
   offsetColour: {fileID: 2100000, guid: e247aff3ed9a965478358c605a5cff69, type: 2}
   pathColour: {fileID: 2100000, guid: 95e61b7d25cae684f8f46f65f53e93e6, type: 2}
   startColour: {fileID: 2100000, guid: 289f3d2f1ec04cd4ead35ab4ef96130c, type: 2}
   endColour: {fileID: 2100000, guid: f25e2db8982f6de4f8300041d4a2dd06, type: 2}
+  rockColour: {fileID: 2100000, guid: 6f4849c41b5c6d94f861d98b6796a9e6, type: 2}
   _renderer: {fileID: 7774334113175434618}
   highlighter: {fileID: 2333318096123861979}
 --- !u!1001 &3215840217851831946

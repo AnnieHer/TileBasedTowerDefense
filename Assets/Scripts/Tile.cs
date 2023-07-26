@@ -12,6 +12,7 @@ public class Tile : MonoBehaviour
     [SerializeField] private GameObject highlighter;
 
     public void Init(bool isOffset) {
+        occupied = false;
         _renderer.material = isOffset ? offsetColour : mainColour;
     }
     public int GetTileType() {
@@ -30,13 +31,16 @@ public class Tile : MonoBehaviour
         selected = false;
     }
     public void ChangeToPath() {
+        occupied = true;
         _renderer.material = pathColour;
         transform.position = new Vector3(transform.position.x, -0.5f, transform.position.z);
     }
     public void ChangeToStart() {
+        occupied = true;
         _renderer.material = startColour;
     }
     public void ChangeToEnd() {
+        occupied = true;
         _renderer.material = endColour;
     }
 }

@@ -34,7 +34,6 @@ public class CameraRotation : MonoBehaviour
         Zoom();
     }
     public void SetNewLimit(float limitMax) {
-        Debug.Log(_positionLimit.y + " new: " + limitMax*5);
         _positionLimit.y = limitMax * 5;
     }
 }
