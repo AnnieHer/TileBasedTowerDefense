@@ -6,7 +6,6 @@ public class Tile : MonoBehaviour
 {
     private int tileType;
     private bool occupied;
-    public bool selected;
     [SerializeField] private Material mainColour, offsetColour, pathColour, startColour, endColour;
     [SerializeField] private Renderer _renderer;
     [SerializeField] private GameObject highlighter;
@@ -21,14 +20,14 @@ public class Tile : MonoBehaviour
     public bool CheckOccupied() {
         return occupied;
     }
-    private void OnMouseEnter() {
+    public void Select() {
         highlighter.SetActive(true);
-        PlayerControls.instance.SendTile(this);
-        selected = true;
     }
-    private void OnMouseExit() {
+    public void Deselect() {
         highlighter.SetActive(false);
-        selected = false;
+    }
+    public void ChangeToTower() {
+        occupied = true;
     }
     public void ChangeToPath() {
         occupied = true;
