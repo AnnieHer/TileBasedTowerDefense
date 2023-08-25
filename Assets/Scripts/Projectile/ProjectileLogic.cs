@@ -5,21 +5,25 @@ using UnityEngine;
 public class ProjectileLogic : MonoBehaviour
 {
     protected AttackData _attackData;
-    
     public void Init(AttackData attackData) {
         _attackData = attackData;
-        _attackData.target.OnDeath += HandleEnemyDeath;
-        foreach (AttackModifier attackModifier in _attackData.attackModifierList) {
-            attackModifier.OnSendModifier(_attackData);
+        foreach(Enemy enemy in _attackData.targets) {
+            enemy.OnDeath += HandleEnemyDeath;
         }
+        if (_attackData.attackModifierList.Count != 0) {
+            foreach (AttackModifier attackModifier in _attackData.attackModifierList) {
+                attackModifier.OnSendModifier(_attackData);
+            }
+        }
+        _attackData.target = _attackData.targets[0];
     }
     private void HandleEnemyDeath(Enemy enemy) {
-        Destroy(gameObject);
+        _attackData.targets.Remove(enemy);
         enemy.OnDeath -= HandleEnemyDeath;
     }
     void Update()
     {
-        if (_attackData.target == null) return;
+        if (_attackData.targets == null) return;
         float step = _attackData.speed * Time.deltaTime;
         transform.position = Vector3.MoveTowards(transform.position, _attackData.target.transform.position, step);
 
@@ -29,15 +33,22 @@ public class ProjectileLogic : MonoBehaviour
         {
             // Снаряд достиг цели
             TargetHit();
+            
         }
     }
     private void TargetHit() {
-        foreach (AttackModifier attackModifier in _attackData.attackModifierList) {
-            attackModifier.OnDeliverModifier(_attackData);
+        if (_attackData.attackModifierList.Count != 0) {
+            foreach (AttackModifier attackModifier in _attackData.attackModifierList) {
+                attackModifier.OnDeliverModifier(_attackData);
+            }
         }
         _attackData.target.OnDeath -= HandleEnemyDeath;
-        _attackData.target.DealDamage(_attackData.damage);
-        
-        Destroy(gameObject);
+        _attackData.target.DealDamage(_attackData.damage, _attackData.damageType);
+
+        _attackData.targets.Remove(_attackData.target);
+        if (_attackData.targets.Count != 0) {
+        _attackData.target = _attackData.targets[0];
+        }
+        else Destroy(this.gameObject);
     }
 }

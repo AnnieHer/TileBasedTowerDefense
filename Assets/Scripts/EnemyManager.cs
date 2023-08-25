@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
 using UnityEngine.Pool;
 
 public class EnemyManager : MonoBehaviour
@@ -53,7 +54,23 @@ public class EnemyManager : MonoBehaviour
         enemyList.Remove(enemy);
         _pool.Release(enemy);
     }
-    public Enemy GetRandomEnemy() {
-        return enemyList[Random.Range(0, enemyList.Count)];
+    public List<Enemy> GetRandomEnemy(int lenght) {
+        List<Enemy> enemies = new List<Enemy>();
+        for (int i = 0; i < lenght; i++) {
+            enemies.Add(enemyList[Random.Range(0, enemyList.Count)]);
+        }
+        return enemies;
     }
+    public List<Enemy> GetClosestEnemy(Vector3 position, float range) {
+        List<Enemy> closestEnemies = new List<Enemy>();
+        closestEnemies = enemyList;
+
+        closestEnemies = enemyList
+        .Where(x => Vector3.Distance(position, x.transform.position) <= range)
+        .OrderBy(x => Vector3.Distance(position, x.transform.position))
+        .ToList();
+
+        return closestEnemies;
+    }
+    
 }

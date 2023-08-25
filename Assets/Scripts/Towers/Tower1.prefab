@@ -98,7 +98,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   towerSo: {fileID: 11400000, guid: bf4afc559b49c5b4a86b35ebc7051667, type: 2}
-  _projectilePrefab: {fileID: 8604749682300813661, guid: 9c7ed2772895e6c45bdc63287351e68a, type: 3}
+  attackModifiers:
+  - {fileID: 11400000, guid: 4bf7957a040b8a04cb5482864ed51975, type: 2}
+  - {fileID: 11400000, guid: b250d8c2a4aeee442a65dd6bc6de805b, type: 2}
 --- !u!135 &5791345094163573415
 SphereCollider:
   m_ObjectHideFlags: 0

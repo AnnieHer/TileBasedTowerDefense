@@ -10,13 +10,17 @@ public class TowerLogic : MonoBehaviour
     protected DamageType _damageType;
     protected float _baseAS, _baseDamage, _baseRange, _projectileSpeed, _baseCost, _baseAttackInterval;
 
-    [SerializeField] protected ProjectileLogic _projectilePrefab;
     protected float _totalAS, _totalDamage, _totalRange;
+    public float GetRange() {
+        return _totalRange;
+    }
     
     protected DamageCalculator _DamageCalculator;
     protected ASCalculator _ASCalculator;
     protected RangeCalculator _RangeCalculator;
 
+    [SerializeField] protected List<AttackModifier> attackModifiers = new List<AttackModifier>(); 
+    
     public float attackInterval {
         get; 
         private set;
@@ -101,9 +105,14 @@ public class TowerLogic : MonoBehaviour
 
     private void Shoot()
     {
-        AttackData attackData = new AttackData(_totalDamage, _projectileSpeed, _currentTarget); 
-        ProjectileLogic projectile = Instantiate(_projectilePrefab, transform.position, Quaternion.identity);
-        projectile.Init(attackData);
+        List<AttackModifier> clonedModifiers = new List<AttackModifier>();
+
+        foreach (AttackModifier modifier in attackModifiers)
+        {
+            clonedModifiers.Add(modifier.Clone());
+        }
+        AttackData attackData = new AttackData(_totalDamage, _projectileSpeed, _currentTarget, _damageType ,this, clonedModifiers);
+        ProjectileManager.instance.SpawnProjectile(attackData, transform.position);
     }
     private void UpdateTarget() {
 

@@ -6,7 +6,8 @@ using UnityEngine;
 public class Enemy : MonoBehaviour
 {
     [Header("CombatParams")]
-    public float maxHP, currentHP;
+    public float maxHP, currentHP, barrierHP;
+    public DamageType barrierType;
     [Header("MoveParams")]
     public float moveSpeed = 1f;
     public float driftDuration = 2f;
@@ -62,8 +63,17 @@ public class Enemy : MonoBehaviour
         moveSpeed += speed;
         driftTimer = driftTimer * (1 - moveSpeed);
     }
-    public void DealDamage(float damage) {
-        currentHP -= damage;
+    public void DealDamage(float damage, DamageType damageType) {
+        if (barrierType == damageType && barrierHP > 0) {
+            barrierHP -= damage;
+            if (barrierHP < 0) {
+                currentHP += barrierHP;
+                barrierHP = 0;
+            }
+        }
+        else {
+            currentHP -= damage;
+        }
         if(currentHP <= 0) {
             currentHP = 0;
             Die();
