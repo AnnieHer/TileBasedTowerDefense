@@ -7,10 +7,12 @@ public class ChainLightning : AttackModifier
 {
     public int jumps;
     public float range;
-    public float damage;
+    [Range(0f, 200f)]
+    public int damagePct;
     public float speed;
     public DamageType damageType;
     public bool canJumpSameTarget;
+    public ProjectileLogic projectile;
 
     private List<Enemy> hitTargets = new List<Enemy>();
     public override AttackModifier Clone() {
@@ -25,7 +27,7 @@ public class ChainLightning : AttackModifier
             hitTargets.Add(attackData.target);
             jumps--;
             if (jumps <= 0) return;
-            attackData.target.DealDamage(damage, damageType);
+            attackData.target.DealDamage(attackData.damage * damagePct / 100f, damageType);
             List<Enemy> targets = EnemyManager.Instance.GetClosestEnemy(attackData.target.transform.position, range);
 
             foreach(Enemy enemy in hitTargets) {
@@ -42,7 +44,7 @@ public class ChainLightning : AttackModifier
                 attackData.towerLogic, 
                 this
             );
-            ProjectileManager.instance.SpawnProjectile(_attackData, attackData.target.transform.position);
+            ProjectileManager.instance.SpawnProjectile(_attackData, attackData.target.transform.position, projectile);
         }
         else 
         {
@@ -50,7 +52,7 @@ public class ChainLightning : AttackModifier
             hitTargets.Add(attackData.target);
             jumps--;
             if (jumps <= 0) return;
-            attackData.target.DealDamage(damage, damageType);
+            attackData.target.DealDamage(damagePct, damageType);
             List<Enemy> targets = EnemyManager.Instance.GetClosestEnemy(attackData.target.transform.position, range);
 
             foreach(Enemy enemy in hitTargets) {
@@ -67,7 +69,7 @@ public class ChainLightning : AttackModifier
                 attackData.towerLogic, 
                 this
             );
-            ProjectileManager.instance.SpawnProjectile(_attackData, attackData.target.transform.position);
+            ProjectileManager.instance.SpawnProjectile(_attackData, attackData.target.transform.position, projectile);
         }
     }
 }

@@ -4,7 +4,6 @@ using System.Runtime.Serialization;
 using UnityEditor;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "NewAttackModifier", menuName = "Attack Modifiers/Empty Modifier")]
 public abstract class AttackModifier : ScriptableObject
 {
     public virtual AttackModifier Clone() {
@@ -15,6 +14,12 @@ public abstract class AttackModifier : ScriptableObject
     }
     public virtual void OnDeliverModifier(AttackData attackData) {
         //do smth when hit
+    }
+    public virtual void OnEnterModifier(AttackData attackData) {
+        //do smth when entering aura
+    }
+    public virtual void OnEndModifier(AttackData attackData) {
+        //do smth when leaving aura
     }
 }
 

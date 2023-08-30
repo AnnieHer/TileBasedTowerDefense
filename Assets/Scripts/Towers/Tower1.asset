@@ -12,12 +12,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 007036ee3925b054ea1e299f027c82c1, type: 3}
   m_Name: Tower1
   m_EditorClassIdentifier: 
-  baseDamage: 11
+  baseDamage: 1
   baseCost: 100
   baseAS: 100
   baseRange: 5
-  baseAttackInterval: 1
+  baseAttackTime: 0
   projectileSpeed: 15
   towerName: Cannon
   targetType: 1
   damageType: 0
+  attackModifiers: []
+  projectile: {fileID: 8604749682300813661, guid: 9c7ed2772895e6c45bdc63287351e68a, type: 3}

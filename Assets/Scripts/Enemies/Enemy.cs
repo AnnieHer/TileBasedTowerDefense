@@ -10,22 +10,27 @@ public class Enemy : MonoBehaviour
     public DamageType barrierType;
     [Header("MoveParams")]
     public float moveSpeed = 1f;
+    private float speedModifier = 1f;
     public float driftDuration = 2f;
-    private float summarySpeed;
     private List<Vector3> path;
     private int currentPathIndex = 0;
     private float driftTimer = 0f;
     private Vector3 initialPosition;
     private Vector3 targetPosition;
-    private float distanceTravelled;
+    public float distanceTravelled{
+        get;
+        private set;
+    } 
+    private Vector3 positionOffset;
 
     public event Action<Enemy> OnDeath;
     public void SetPath(List<Vector3> newPath)
     {
+        positionOffset = new Vector3(UnityEngine.Random.Range(-0.4f, 0.4f), 0, UnityEngine.Random.Range(-0.4f, 0.4f));
         path = newPath;
         currentPathIndex = 0;
-        initialPosition = path[currentPathIndex];
-        targetPosition = path[currentPathIndex + 1];
+        initialPosition = path[currentPathIndex] + positionOffset;
+        targetPosition = path[currentPathIndex + 1] + positionOffset;
         driftTimer = 0f;
         transform.position = path[0];
         currentHP = maxHP;
@@ -42,26 +47,24 @@ public class Enemy : MonoBehaviour
             return;
         }
 
-        driftTimer += Time.deltaTime;
-        summarySpeed = driftDuration + driftDuration * (1 - moveSpeed);
-        float t = driftTimer / summarySpeed;
+        driftTimer += Time.deltaTime * speedModifier;
+        float t = driftTimer / driftDuration;
         distanceTravelled += t;
         transform.position = Vector3.Lerp(initialPosition, targetPosition, t);
 
-        if (driftTimer >= summarySpeed)
+        if (driftTimer >= driftDuration)
         {
             currentPathIndex++;
             if (currentPathIndex < path.Count - 1)
             {
-                initialPosition = path[currentPathIndex];
-                targetPosition = path[currentPathIndex + 1];
+                initialPosition = path[currentPathIndex] + positionOffset;
+                targetPosition = path[currentPathIndex + 1] + positionOffset;
                 driftTimer = 0f;
             }
         }
     }
-    public void ChangeMoveSpeed(float speed) {
-        moveSpeed += speed;
-        driftTimer = driftTimer * (1 - moveSpeed);
+    public void ApplySlow(float speed) {
+        speedModifier *= speed;
     }
     public void DealDamage(float damage, DamageType damageType) {
         if (barrierType == damageType && barrierHP > 0) {

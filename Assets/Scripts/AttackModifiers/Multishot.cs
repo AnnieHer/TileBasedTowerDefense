@@ -25,7 +25,7 @@ public class Multishot : AttackModifier
             int i = 0;
             foreach(Enemy enemy in enemies) {
                 if (i > targetCount) {
-                    return;
+                    break;
                 }
                 List<AttackModifier> clonedModifiers = new List<AttackModifier>();
                 foreach (AttackModifier modifier in attackData.attackModifierList)
@@ -42,7 +42,7 @@ public class Multishot : AttackModifier
                     clonedModifiers
                 );
                 i++;
-                ProjectileManager.instance.SpawnProjectile(_attackData, attackData.towerLogic.transform.position);
+                ProjectileManager.instance.SpawnProjectile(_attackData, attackData.towerLogic.transform.position, attackData.towerLogic.GetProjectile());
             }
         }
         else 
@@ -57,7 +57,7 @@ public class Multishot : AttackModifier
             int i = 0;
             foreach(Enemy enemy in enemies) {
                 if (i > targetCount) {
-                    return;
+                    break;
                 }
                 AttackData _attackData = new AttackData(
                     attackData.damage,
@@ -68,7 +68,7 @@ public class Multishot : AttackModifier
                     new List<AttackModifier>()
                 );
                 i++;
-                ProjectileManager.instance.SpawnProjectile(_attackData, attackData.towerLogic.transform.position);
+                ProjectileManager.instance.SpawnProjectile(_attackData, attackData.towerLogic.transform.position, attackData.towerLogic.GetProjectile());
             }
         }
     }
