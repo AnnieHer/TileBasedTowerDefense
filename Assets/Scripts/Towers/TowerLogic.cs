@@ -6,27 +6,44 @@ using UnityEngine;
 public abstract class TowerLogic : MonoBehaviour
 {
     [Header("Serializable Object stats")]
-    [SerializeField] protected TowerSO towerSo;
-
+    protected TowerSO _towerSo;
+    public TowerSO GetTowerSO() {
+        TowerSO towerSO = new TowerSO() {
+            towerName = _towerName,
+            baseStats = _baseStats,
+            projectileSpeed = _projectileSpeed,
+            projectile = _projectile,
+            baseCost = _baseCost,
+            baseAttackTime = _baseAttackTime,
+            targetType = _targetType,
+            damageType = _damageType,
+            attackModifiers = _attackModifiers,
+            upgrades = _upgrades,
+            prefab = _towerSo.prefab
+        };
+        return towerSO;
+    }
+    public string _towerName;
+    protected int _baseCost;
     protected DamageType _damageType;
-    protected float _projectileSpeed, _baseCost, _baseAttackTime;
+    protected float _projectileSpeed, _baseAttackTime;
     protected ProjectileLogic _projectile;
     public ProjectileLogic GetProjectile() {
         return _projectile;
     }
 
-    protected Stats _baseStats;
-    protected Stats _totalStats;
+    protected Stats _baseStats = new Stats();
+    protected Stats _totalStats = new Stats();
     public float GetRange() {
         return _totalStats.attackRange;
     }
     
-    
+    protected Rarity _towerRarity;
 
     protected int _maxModifiers;
-    protected List<AttackModifier> attackModifiers = new List<AttackModifier>(); 
+    protected List<AttackModifier> _attackModifiers = new List<AttackModifier>(); 
     protected int _maxUpgrades;
-    protected StatsCalculator _StatsCalculator;
+    protected StatsCalculator _statsCalculator = new StatsCalculator();
     protected List<UpgradeUnit> _upgrades;
     
     public float attackInterval {
@@ -41,28 +58,28 @@ public abstract class TowerLogic : MonoBehaviour
 
     protected SphereCollider _sphereCollider;
     
-    
-    protected virtual void Start() {
+    public void Init(TowerSO towerSO) {
+        _towerSo = Instantiate(towerSO);
+        _towerName = towerSO.towerName;
         _sphereCollider = GetComponent<SphereCollider>();
+        _baseStats = towerSO.baseStats;
 
-        _baseStats.damage = towerSo.baseDamage;
-        _baseStats.attackSpeed = towerSo.baseAS;
-        _baseStats.attackRange = towerSo.baseRange;
-        _baseCost = towerSo.baseCost;
-        _baseAttackTime = towerSo.baseAttackTime;   
-        _projectileSpeed = towerSo.projectileSpeed;
-        _projectile = towerSo.projectile;
+        _baseCost = towerSO.baseCost;
+        _baseAttackTime = towerSO.baseAttackTime;   
+        _projectileSpeed = towerSO.projectileSpeed;
+        _projectile = towerSO.projectile;
 
-        _damageType = towerSo.damageType;
-        _targetType = towerSo.targetType;
+        _towerRarity = towerSO.towerRarity;
+        _damageType = towerSO.damageType;
+        _targetType = towerSO.targetType;
 
-        _totalStats.damage = _baseStats.damage;
-        _totalStats.attackSpeed = _baseStats.attackSpeed;
-        _totalStats.attackRange = _baseStats.attackRange;
+        _totalStats = _baseStats;
 
-        attackModifiers = new List<AttackModifier>();
-        foreach(AttackModifier attackModifier in towerSo.attackModifiers) {
-            attackModifiers.Add(attackModifier.Clone());
+        _totalStats = _statsCalculator.CalculateTotalStats(_baseStats);
+
+        _attackModifiers = new List<AttackModifier>();
+        foreach(AttackModifier attackModifier in towerSO.attackModifiers) {
+            _attackModifiers.Add(attackModifier.Clone());
         }
 
         attackInterval = _baseAttackTime / (1 + (_totalStats.attackSpeed / 100));
@@ -72,22 +89,24 @@ public abstract class TowerLogic : MonoBehaviour
         StartCoroutine(ShootProjectiles());
     }
     public virtual void AddModifier(AttackModifier attackModifier) {
-        if (attackModifiers.Count < _maxModifiers) {
-            attackModifiers.Add(attackModifier);
+        if (_attackModifiers.Count < _maxModifiers) {
+            _attackModifiers.Add(attackModifier);
         }
     }
     public virtual void RemoveModifier(AttackModifier attackModifier) {
-        attackModifiers.Remove(attackModifier);
+        _attackModifiers.Remove(attackModifier);
     }
     public virtual void AddUpgrade(UpgradeUnit upgradeUnit) {
+        if (_upgrades.Count > _maxUpgrades) 
+            return;
         _upgrades.Add(upgradeUnit);
         foreach(StatsModifier statsModifier in upgradeUnit.GetModifiers())
-        _StatsCalculator.AddModifier(statsModifier);
+            _statsCalculator.AddModifier(statsModifier);
     }
     public virtual void RemoveUpgrade(UpgradeUnit upgradeUnit) {
         _upgrades.Remove(upgradeUnit);
         foreach(StatsModifier statsModifier in upgradeUnit.GetModifiers())
-        _StatsCalculator.RemoveModofier(statsModifier);
+            _statsCalculator.RemoveModofier(statsModifier);
     }
     protected virtual IEnumerator Tick() {
         while (true) {
@@ -103,7 +122,7 @@ public abstract class TowerLogic : MonoBehaviour
     }
     protected virtual void OnTriggerEnter(Collider other)
     {
-        if (other.transform.TryGetComponent<Enemy>(out Enemy enemy)) {
+        if (other.transform.TryGetComponent(out Enemy enemy)) {
             _inRangeEnemies.Add(enemy);
             enemy.OnDeath += HandleEnemyDeath;
             UpdateTarget();
@@ -111,7 +130,7 @@ public abstract class TowerLogic : MonoBehaviour
     }
     protected virtual void OnTriggerExit(Collider other)
     {
-        if (other.transform.TryGetComponent<Enemy>(out Enemy enemy)) {
+        if (other.transform.TryGetComponent(out Enemy enemy)) {
             _inRangeEnemies.Remove(enemy);
             UpdateTarget();
         }
@@ -135,7 +154,7 @@ public abstract class TowerLogic : MonoBehaviour
     {
         List<AttackModifier> clonedModifiers = new List<AttackModifier>();
 
-        foreach (AttackModifier modifier in attackModifiers)
+        foreach (AttackModifier modifier in _attackModifiers)
         {
             clonedModifiers.Add(modifier.Clone());
         }
@@ -176,8 +195,8 @@ public abstract class TowerLogic : MonoBehaviour
             case TargetSelection.strongest: 
                 float maxHP = 0;
                 foreach (Enemy enemy in _inRangeEnemies) {
-                    if (enemy.currentHP > maxHP) {
-                        maxHP = enemy.currentHP;
+                    if (enemy._currentHP > maxHP) {
+                        maxHP = enemy._currentHP;
                         _currentTarget = enemy;
                     }
                 }
@@ -186,8 +205,8 @@ public abstract class TowerLogic : MonoBehaviour
             case TargetSelection.weakest: 
                 float minHP = 0;
                 foreach (Enemy enemy in _inRangeEnemies) {
-                    if (enemy.currentHP < minHP) {
-                        maxHP = enemy.currentHP;
+                    if (enemy._currentHP < minHP) {
+                        maxHP = enemy._currentHP;
                         _currentTarget = enemy;
                     }
                 }

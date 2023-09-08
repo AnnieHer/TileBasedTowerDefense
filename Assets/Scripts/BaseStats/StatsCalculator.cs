@@ -42,7 +42,6 @@ public class StatsCalculator
             attackSpeed = baseStats.attackSpeed,
             attackRange = baseStats.attackRange
         };
-
         foreach (ModifierStatsType statType in Enum.GetValues(typeof(ModifierStatsType)))
         {
             float baseValue = GetStatValue(statType, baseStats);

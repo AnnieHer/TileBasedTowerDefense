@@ -772,6 +772,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0a4d2de62901e8642888590ee77e56c9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  selectedTower: {fileID: 11400000, guid: bf4afc559b49c5b4a86b35ebc7051667, type: 2}
   gridTileLayer:
     serializedVersion: 2
     m_Bits: 512
@@ -1309,7 +1310,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 800cd93efc2866949ae89302d7cd4b04, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  tower: {fileID: 3096954470538250220, guid: 7e9c0125ad6ea3045ba7005d1399d12f, type: 3}
 --- !u!4 &753724741
 Transform:
   m_ObjectHideFlags: 0
@@ -3175,7 +3175,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9061d2d167115d3489373e27d4425dc5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  projectileLogic: {fileID: 8604749682300813661, guid: 9c7ed2772895e6c45bdc63287351e68a, type: 3}
 --- !u!4 &1965536441
 Transform:
   m_ObjectHideFlags: 0

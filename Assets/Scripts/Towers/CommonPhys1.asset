@@ -10,16 +10,20 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 007036ee3925b054ea1e299f027c82c1, type: 3}
-  m_Name: Tower1
+  m_Name: CommonPhys1
   m_EditorClassIdentifier: 
-  baseDamage: 1
   baseCost: 100
-  baseAS: 100
-  baseRange: 5
-  baseAttackTime: 0
+  baseStats:
+    damage: 7
+    attackSpeed: 300
+    attackRange: 3
+  baseAttackTime: 4
   projectileSpeed: 15
   towerName: Cannon
+  towerRarity: 0
   targetType: 1
   damageType: 0
   attackModifiers: []
+  upgrades: []
   projectile: {fileID: 8604749682300813661, guid: 9c7ed2772895e6c45bdc63287351e68a, type: 3}
+  prefab: {fileID: 5558600630884320586, guid: 14e33f8ec51db4043970f54d6532d32b, type: 3}

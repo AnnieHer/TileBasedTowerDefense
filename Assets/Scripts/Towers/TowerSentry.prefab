@@ -97,8 +97,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8dc26548070537b4ab2680b233b5467a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  towerSo: {fileID: 11400000, guid: bf4afc559b49c5b4a86b35ebc7051667, type: 2}
-  attackModifiers: []
+  towerSo: {fileID: 0}
 --- !u!135 &5791345094163573415
 SphereCollider:
   m_ObjectHideFlags: 0

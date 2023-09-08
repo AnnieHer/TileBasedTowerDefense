@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 007036ee3925b054ea1e299f027c82c1, type: 3}
+  m_Name: SpecialSlowAura
+  m_EditorClassIdentifier: 
+  baseCost: 100
+  baseStats:
+    damage: 2
+    attackSpeed: 0
+    attackRange: 2.5
+  baseAttackTime: 4
+  projectileSpeed: 15
+  towerName: Cannon
+  towerRarity: 2
+  targetType: 0
+  damageType: 1
+  attackModifiers:
+  - {fileID: 11400000, guid: ba9a357d1a76868459cdc6763b8372ee, type: 2}
+  upgrades: []
+  projectile: {fileID: 8604749682300813661, guid: 9c7ed2772895e6c45bdc63287351e68a, type: 3}
+  prefab: {fileID: 5558600630884320586, guid: 14e33f8ec51db4043970f54d6532d32b, type: 3}

@@ -6,6 +6,7 @@ using UnityEngine.EventSystems;
 public class PlayerControls : MonoBehaviour
 {
     public static PlayerControls instance;
+    [SerializeField] private TowerSO selectedTower;
     [SerializeField] private LayerMask gridTileLayer;
     private Tile _selectedTile;
     private Camera _camera;
@@ -39,7 +40,7 @@ public class PlayerControls : MonoBehaviour
             
             CameraControls.Instance.Center(_selectedTile.transform.position);
             if (!_selectedTile.CheckOccupied()) {
-                TowerManager.instance.SpawnTower(_selectedTile.transform.position);
+                TowerManager.instance.SpawnTower(_selectedTile.transform.position, selectedTower);
                 _selectedTile.ChangeToTower();
             }
         }

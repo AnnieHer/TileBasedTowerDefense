@@ -11,7 +11,7 @@ public class TowerAura : TowerLogic
 
             List<AttackModifier> clonedModifiers = new List<AttackModifier>();
 
-            foreach (AttackModifier modifier in attackModifiers)
+            foreach (AttackModifier modifier in _attackModifiers)
             {
                 clonedModifiers.Add(modifier.Clone());
             }
@@ -26,7 +26,7 @@ public class TowerAura : TowerLogic
 
             List<AttackModifier> clonedModifiers = new List<AttackModifier>();
 
-            foreach (AttackModifier modifier in attackModifiers)
+            foreach (AttackModifier modifier in _attackModifiers)
             {
                 clonedModifiers.Add(modifier.Clone());
             }

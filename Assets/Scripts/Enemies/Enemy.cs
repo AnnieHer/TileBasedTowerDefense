@@ -6,10 +6,10 @@ using UnityEngine;
 public class Enemy : MonoBehaviour
 {
     [Header("CombatParams")]
-    public float maxHP, currentHP, barrierHP;
-    public DamageType barrierType;
+    public float _maxHP, _currentHP, _barrierHP;
+    public DamageType _barrierType;
     [Header("MoveParams")]
-    public float moveSpeed = 1f;
+    public float _moveSpeed = 1f;
     private float speedModifier = 1f;
     public float driftDuration = 2f;
     private List<Vector3> path;
@@ -24,6 +24,13 @@ public class Enemy : MonoBehaviour
     private Vector3 positionOffset;
 
     public event Action<Enemy> OnDeath;
+    public void Init(EnemySO enemySO) {
+        _maxHP = enemySO.maxHealth;
+        _barrierHP = enemySO.barrierHealth;
+        _moveSpeed = enemySO.speed;
+        _barrierType = enemySO.barrierType;
+        _currentHP = _maxHP;
+    }
     public void SetPath(List<Vector3> newPath)
     {
         positionOffset = new Vector3(UnityEngine.Random.Range(-0.4f, 0.4f), 0, UnityEngine.Random.Range(-0.4f, 0.4f));
@@ -33,7 +40,6 @@ public class Enemy : MonoBehaviour
         targetPosition = path[currentPathIndex + 1] + positionOffset;
         driftTimer = 0f;
         transform.position = path[0];
-        currentHP = maxHP;
     }
 
     private void Update()
@@ -67,18 +73,18 @@ public class Enemy : MonoBehaviour
         speedModifier *= speed;
     }
     public void DealDamage(float damage, DamageType damageType) {
-        if (barrierType == damageType && barrierHP > 0) {
-            barrierHP -= damage;
-            if (barrierHP < 0) {
-                currentHP += barrierHP;
-                barrierHP = 0;
+        if (_barrierType == damageType && _barrierHP > 0) {
+            _barrierHP -= damage;
+            if (_barrierHP < 0) {
+                _currentHP += _barrierHP;
+                _barrierHP = 0;
             }
         }
         else {
-            currentHP -= damage;
+            _currentHP -= damage;
         }
-        if(currentHP <= 0) {
-            currentHP = 0;
+        if(_currentHP <= 0) {
+            _currentHP = 0;
             Die();
         }
     }
