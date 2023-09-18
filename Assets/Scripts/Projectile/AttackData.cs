@@ -11,8 +11,17 @@ public class AttackData
     public DamageType damageType;
     public TowerLogic towerLogic;
     public List<AttackModifier> attackModifierList;
+    public MapLogic mapLogic;
 
-    public AttackData(float attackDamage, float projectileSpeed, Enemy nextTarget, DamageType type, TowerLogic tower, List<AttackModifier> attackModifiers) {
+    public AttackData(
+        float attackDamage, 
+        float projectileSpeed, 
+        Enemy nextTarget, 
+        DamageType type, 
+        TowerLogic tower, 
+        List<AttackModifier> attackModifiers,
+        MapLogic map
+        ) {
         damage = attackDamage;
         speed = projectileSpeed;
         targets = new List<Enemy>();
@@ -20,8 +29,17 @@ public class AttackData
         damageType = type;
         towerLogic = tower;
         attackModifierList = attackModifiers;
+        mapLogic = map;
     }
-    public AttackData(float attackDamage, float projectileSpeed, Enemy nextTarget, DamageType type, TowerLogic tower, AttackModifier attackModifier) {
+    public AttackData(
+        float attackDamage, 
+        float projectileSpeed, 
+        Enemy nextTarget, 
+        DamageType type, 
+        TowerLogic tower, 
+        AttackModifier attackModifier,
+        MapLogic map
+        ) {
         damage = attackDamage;
         speed = projectileSpeed;
         targets = new List<Enemy>();
@@ -30,17 +48,23 @@ public class AttackData
         towerLogic = tower;
         attackModifierList = new List<AttackModifier>();
         attackModifierList.Add(attackModifier);
-    }public AttackData(float attackDamage, float projectileSpeed, List<Enemy> nextTarget, DamageType type, TowerLogic tower, List<AttackModifier> attackModifiers) {
+        mapLogic = map;
+    }
+    public AttackData(
+        float attackDamage, 
+        float projectileSpeed, 
+        List<Enemy> nextTarget, 
+        DamageType type, 
+        TowerLogic tower, 
+        List<AttackModifier> attackModifiers,
+        MapLogic map
+        ) {
         damage = attackDamage;
         speed = projectileSpeed;
         targets = nextTarget;
         damageType = type;
         towerLogic = tower;
         attackModifierList = attackModifiers;
-    }
-    public AttackData(float _totalDamage) {
-        damage = 0;
-        speed = 1;
-        targets = EnemyManager.Instance.GetRandomEnemy(1);
+        mapLogic = map;
     }
 }

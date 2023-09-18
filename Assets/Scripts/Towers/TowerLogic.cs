@@ -45,7 +45,8 @@ public abstract class TowerLogic : MonoBehaviour
     protected int _maxUpgrades;
     protected StatsCalculator _statsCalculator = new StatsCalculator();
     protected List<UpgradeUnit> _upgrades;
-    
+    protected MapLogic mapLogic;
+
     public float attackInterval {
         get; 
         private set;
@@ -58,7 +59,8 @@ public abstract class TowerLogic : MonoBehaviour
 
     protected SphereCollider _sphereCollider;
     
-    public void Init(TowerSO towerSO) {
+    public void Init(TowerSO towerSO, MapLogic map) {
+        mapLogic = map;
         _towerSo = Instantiate(towerSO);
         _towerName = towerSO.towerName;
         _sphereCollider = GetComponent<SphereCollider>();
@@ -158,8 +160,8 @@ public abstract class TowerLogic : MonoBehaviour
         {
             clonedModifiers.Add(modifier.Clone());
         }
-        AttackData attackData = new AttackData(_totalStats.damage, _projectileSpeed, _currentTarget, _damageType ,this, clonedModifiers);
-        ProjectileManager.instance.SpawnProjectile(attackData, transform.position, _projectile);
+        AttackData attackData = new AttackData(_totalStats.damage, _projectileSpeed, _currentTarget, _damageType ,this, clonedModifiers, mapLogic);
+        mapLogic.ProjectileManager().SpawnProjectile(attackData, transform.position, _projectile);
     }
     protected virtual void UpdateTarget() {
 

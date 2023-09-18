@@ -28,7 +28,7 @@ public class ChainLightning : AttackModifier
             jumps--;
             if (jumps <= 0) return;
             attackData.target.DealDamage(attackData.damage * damagePct / 100f, damageType);
-            List<Enemy> targets = EnemyManager.Instance.GetClosestEnemy(attackData.target.transform.position, range);
+            List<Enemy> targets = attackData.mapLogic.EnemyManager().GetClosestEnemy(attackData.target.transform.position, range);
 
             foreach(Enemy enemy in hitTargets) {
                 targets.Remove(enemy);
@@ -42,9 +42,10 @@ public class ChainLightning : AttackModifier
                 nextTarget, 
                 damageType, 
                 attackData.towerLogic, 
-                this
+                this,
+                attackData.mapLogic
             );
-            ProjectileManager.instance.SpawnProjectile(_attackData, attackData.target.transform.position, projectile);
+            attackData.mapLogic.ProjectileManager().SpawnProjectile(_attackData, attackData.target.transform.position, projectile);
         }
         else 
         {
@@ -53,7 +54,7 @@ public class ChainLightning : AttackModifier
             jumps--;
             if (jumps <= 0) return;
             attackData.target.DealDamage(damagePct, damageType);
-            List<Enemy> targets = EnemyManager.Instance.GetClosestEnemy(attackData.target.transform.position, range);
+            List<Enemy> targets = attackData.mapLogic.EnemyManager().GetClosestEnemy(attackData.target.transform.position, range);
 
             foreach(Enemy enemy in hitTargets) {
                 targets.Remove(enemy);
@@ -67,9 +68,10 @@ public class ChainLightning : AttackModifier
                 nextTarget, 
                 damageType, 
                 attackData.towerLogic, 
-                this
+                this,
+                attackData.mapLogic
             );
-            ProjectileManager.instance.SpawnProjectile(_attackData, attackData.target.transform.position, projectile);
+            attackData.mapLogic.ProjectileManager().SpawnProjectile(_attackData, attackData.target.transform.position, projectile);
         }
     }
 }

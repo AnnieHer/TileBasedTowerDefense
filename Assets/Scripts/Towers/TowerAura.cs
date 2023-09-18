@@ -15,8 +15,8 @@ public class TowerAura : TowerLogic
             {
                 clonedModifiers.Add(modifier.Clone());
             }
-            AttackData attackData = new AttackData(_totalStats.damage, _projectileSpeed, enemy, _damageType ,this, clonedModifiers);
-            ProjectileManager.instance.SpawnProjectile(attackData, enemy.transform.position, _projectile);
+            AttackData attackData = new AttackData(_totalStats.damage, _projectileSpeed, enemy, _damageType ,this, clonedModifiers, mapLogic);
+            mapLogic.ProjectileManager().SpawnProjectile(attackData, enemy.transform.position, _projectile);
         }
     }
     protected override void OnTriggerExit(Collider other)
@@ -30,8 +30,8 @@ public class TowerAura : TowerLogic
             {
                 clonedModifiers.Add(modifier.Clone());
             }
-            AttackData attackData = new AttackData(_totalStats.damage, _projectileSpeed, enemy, _damageType ,this, clonedModifiers);
-            ProjectileManager.instance.SpawnProjectile(attackData, enemy.transform.position, _projectile);
+            AttackData attackData = new AttackData(_totalStats.damage, _projectileSpeed, enemy, _damageType ,this, clonedModifiers, mapLogic);
+            mapLogic.ProjectileManager().SpawnProjectile(attackData, enemy.transform.position, _projectile);
         }
     }
     protected override IEnumerator ShootProjectiles()

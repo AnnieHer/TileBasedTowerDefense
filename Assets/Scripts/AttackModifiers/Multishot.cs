@@ -15,7 +15,7 @@ public class Multishot : AttackModifier
         if (ProcModifiers) 
         {
             enemies = new List<Enemy>(
-                EnemyManager.Instance.GetClosestEnemy(
+                attackData.mapLogic.EnemyManager().GetClosestEnemy(
                     attackData.towerLogic.transform.position, 
                     attackData.towerLogic.GetRange() + 0.5f
                 )
@@ -39,16 +39,17 @@ public class Multishot : AttackModifier
                     enemies[i], 
                     attackData.damageType, 
                     attackData.towerLogic, 
-                    clonedModifiers
+                    clonedModifiers,
+                    attackData.mapLogic
                 );
                 i++;
-                ProjectileManager.instance.SpawnProjectile(_attackData, attackData.towerLogic.transform.position, attackData.towerLogic.GetProjectile());
+                attackData.mapLogic.ProjectileManager().SpawnProjectile(_attackData, attackData.towerLogic.transform.position, attackData.towerLogic.GetProjectile());
             }
         }
         else 
         {
             enemies = new List<Enemy>(
-                EnemyManager.Instance.GetClosestEnemy(
+                attackData.mapLogic.EnemyManager().GetClosestEnemy(
                     attackData.towerLogic.transform.position, 
                     attackData.towerLogic.GetRange() + 0.5f
                 )
@@ -65,10 +66,11 @@ public class Multishot : AttackModifier
                     enemies[i], 
                     attackData.damageType, 
                     attackData.towerLogic,
-                    new List<AttackModifier>()
+                    new List<AttackModifier>(),
+                    attackData.mapLogic
                 );
                 i++;
-                ProjectileManager.instance.SpawnProjectile(_attackData, attackData.towerLogic.transform.position, attackData.towerLogic.GetProjectile());
+                _attackData.mapLogic.ProjectileManager().SpawnProjectile(_attackData, attackData.towerLogic.transform.position, attackData.towerLogic.GetProjectile());
             }
         }
     }

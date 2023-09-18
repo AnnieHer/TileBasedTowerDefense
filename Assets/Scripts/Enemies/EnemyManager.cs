@@ -4,44 +4,41 @@ using UnityEngine;
 using System.Linq;
 using UnityEngine.Pool;
 
-public class EnemyManager : MonoBehaviour
+public class EnemyManager
 {
-    public static EnemyManager Instance;
     [SerializeField] private Enemy enemyPrefab;
     private ObjectPool<Enemy> _pool;
     private List<Vector3> path;
     private List<Enemy> enemyList = new List<Enemy>();
-
-    private void Awake() {
-        Instance = this;
-    }
-    private void Start() {
+    private MapLogic _mapLogic;
+    
+    public void SetReferenceToMap(MapLogic mapLogic) {
+        _mapLogic = mapLogic;
         _pool = new ObjectPool<Enemy>(() => {
-            return Instantiate(enemyPrefab);
+            return GameObject.Instantiate(enemyPrefab);
         }, Enemy => {
             Enemy.gameObject.SetActive(true);
         }, Enemy => {
             Enemy.gameObject.SetActive(false);
         }, Enemy => {
-            Destroy(Enemy.gameObject);
+            GameObject.Destroy(Enemy.gameObject);
         }, false, 100, 100);
     }
     
-    private void Update() {
-        if (Input.GetKeyDown(KeyCode.Mouse1)) {
-            Vector2[] pathArray = GridManager.Instance.GetPath();
-            path = new List<Vector3>();
-            foreach (Vector2 point in pathArray)
-            {
-                Vector3 position = new Vector3(point.x, 0.5f, point.y);
-                path.Add(position);
-            }
-            
-            Enemy spawnedEnemy = _pool.Get();;
-            enemyList.Add(spawnedEnemy);
-            spawnedEnemy.SetPath(path);
-            spawnedEnemy.OnDeath += HandleEnemyDeath;
+    public void SpawnEnemy() {
+        Vector2[] pathArray = GridManager.Instance.GetPath();
+        path = new List<Vector3>();
+        foreach (Vector2 point in pathArray)
+        {
+            Vector3 position = new Vector3(point.x, 0.5f, point.y);
+            path.Add(position);
         }
+        
+        Enemy spawnedEnemy = _pool.Get();;
+        enemyList.Add(spawnedEnemy);
+        spawnedEnemy.SetPath(path);
+        spawnedEnemy.OnDeath += HandleEnemyDeath;
+
     }
     private void HandleEnemyDeath(Enemy enemy) {
         RemoveEnemy(enemy);

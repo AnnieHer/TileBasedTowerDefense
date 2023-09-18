@@ -10,10 +10,14 @@ public class PlayerControls : MonoBehaviour
     [SerializeField] private LayerMask gridTileLayer;
     private Tile _selectedTile;
     private Camera _camera;
+    private MapLogic mapLogic;
     Ray pointerRay;
     private void Awake() {
         instance = this;
         _camera = Camera.main;
+    }
+    public void Init(MapLogic map) {
+        mapLogic = map;
     }
     public void SendTile(Tile tile) {
         _selectedTile = tile;
@@ -40,7 +44,7 @@ public class PlayerControls : MonoBehaviour
             
             CameraControls.Instance.Center(_selectedTile.transform.position);
             if (!_selectedTile.CheckOccupied()) {
-                TowerManager.instance.SpawnTower(_selectedTile.transform.position, selectedTower);
+                mapLogic.TowerManager().SpawnTower(_selectedTile.transform.position, selectedTower);
                 _selectedTile.ChangeToTower();
             }
         }
