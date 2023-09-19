@@ -6,14 +6,16 @@ using UnityEngine.Pool;
 
 public class EnemyManager
 {
-    [SerializeField] private Enemy enemyPrefab;
+    private Enemy enemyPrefab;
     private ObjectPool<Enemy> _pool;
     private List<Vector3> path;
     private List<Enemy> enemyList = new List<Enemy>();
     private MapLogic _mapLogic;
     
-    public void SetReferenceToMap(MapLogic mapLogic) {
+    public void SetReferenceToMap(MapLogic mapLogic, Enemy enemy) {
+        enemyPrefab = enemy;
         _mapLogic = mapLogic;
+        _mapLogic.OnMapCleanup += ClearEnemies;
         _pool = new ObjectPool<Enemy>(() => {
             return GameObject.Instantiate(enemyPrefab);
         }, Enemy => {
@@ -24,9 +26,15 @@ public class EnemyManager
             GameObject.Destroy(Enemy.gameObject);
         }, false, 100, 100);
     }
+    private void ClearEnemies(MapLogic mapLogic) {
+        foreach (Enemy enemy in enemyList) {
+            _pool.Release(enemy);
+        }
+        enemyList = new List<Enemy>();
+    }
     
-    public void SpawnEnemy() {
-        Vector2[] pathArray = GridManager.Instance.GetPath();
+    public void SpawnEnemy(EnemySO enemySO) {
+        Vector2[] pathArray = _mapLogic.GetPath();
         path = new List<Vector3>();
         foreach (Vector2 point in pathArray)
         {
@@ -38,7 +46,8 @@ public class EnemyManager
         enemyList.Add(spawnedEnemy);
         spawnedEnemy.SetPath(path);
         spawnedEnemy.OnDeath += HandleEnemyDeath;
-
+        spawnedEnemy.Init(enemySO);
+        spawnedEnemy.transform.SetParent(_mapLogic.transform);
     }
     private void HandleEnemyDeath(Enemy enemy) {
         RemoveEnemy(enemy);
@@ -48,8 +57,8 @@ public class EnemyManager
         enemyList.Add(enemy);
     }
     public void RemoveEnemy(Enemy enemy) {
-        enemyList.Remove(enemy);
         _pool.Release(enemy);
+        enemyList.Remove(enemy);
     }
     public List<Enemy> GetRandomEnemy(int lenght) {
         List<Enemy> enemies = new List<Enemy>();

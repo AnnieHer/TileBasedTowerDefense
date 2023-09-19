@@ -1,9 +1,19 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class MapLogic : MonoBehaviour
 {
+    [SerializeField] private Enemy enemyPrefab;
+    private Vector2[] PathArray;
+    private Vector2Int mapSize;
+    public void SetMapSize(Vector2 size) {
+        mapSize = new Vector2Int((int)size.x, (int)size.y);
+    }
+    public Vector2Int GetMapSize() {
+        return mapSize;
+    }
     private int mapID;
     private PlayerManager playerManager;
     public PlayerManager PlayerManager() {
@@ -21,13 +31,29 @@ public class MapLogic : MonoBehaviour
     public EnemyManager EnemyManager() {
         return enemyManager;
     }
+
+    public event Action<MapLogic> OnMapCleanup;
+    public void CleanMap() {
+        OnMapCleanup?.Invoke(this);
+    }
+
     void Start()
     {
         playerManager = new PlayerManager();
+        playerManager.SetReferenceToMap(this);
         projectileManager = new ProjectileManager();
+        projectileManager.SetReferenceToMap(this);
         towerManager = new TowerManager();
+        towerManager.SetReferenceToMap(this);
         enemyManager = new EnemyManager();
+        enemyManager.SetReferenceToMap(this, enemyPrefab);
 
         PlayerControls.instance.Init(this);
+    }
+    public void SendPath(Vector2[] path) {
+        PathArray = path;
+    }
+    public Vector2[] GetPath() {
+        return PathArray;
     }
 }

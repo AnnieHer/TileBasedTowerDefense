@@ -11,7 +11,7 @@ public abstract class StatusEffect : ScriptableObject
     public virtual void ApplyForDuration(AttackData attackData) {
         StatusEffect statusEffect = Clone();
         statusEffect.Apply(attackData);
-        StatusEffectInstance.instance.StartCoroutine(RemoveOnTime(attackData, statusEffect));
+        attackData.mapLogic.StartCoroutine(RemoveOnTime(attackData, statusEffect));
     }
     public virtual void ApplyUntilRemoved(AttackData attackData) {
         StatusEffect statusEffect = Clone();

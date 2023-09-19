@@ -7,9 +7,8 @@ public class GridManager : MonoBehaviour
 {
     [SerializeField] private int width, height, amountOfTurns;
     [SerializeField] private Tile tilePrefab;
-    [SerializeField] private Transform gridParent;
+    [SerializeField] private MapLogic gridParent;
     private Dictionary<Vector2, Tile> TileMap;
-    private int currentX, currentZ;
     private List<Vector2> path;
     public static GridManager Instance;
     private ObjectPool<Tile> _pool;
@@ -45,6 +44,7 @@ public class GridManager : MonoBehaviour
         _usePool = use;
     }
     public void GenerateGrid() {
+        MapLogic mapLogic = FindObjectOfType<MapLogic>() ? FindObjectOfType<MapLogic>() : Instantiate(gridParent);
         TileMap = new Dictionary<Vector2, Tile>();
         Vector2 start = GetRandomPointOnEdge();
         Vector2 end = new Vector2(width - 1 - start.x, height - 1 - start.y);
@@ -54,15 +54,14 @@ public class GridManager : MonoBehaviour
                 Tile spawnedTile = _usePool ? _pool.Get() : Instantiate(tilePrefab);
                 spawnedTile.transform.SetPositionAndRotation(new Vector3(x, Random.Range(-0.2f, 0.2f), z), Quaternion.identity);
                 spawnedTile.name = $"Tile {x} {z}";
-                spawnedTile.transform.SetParent(gridParent);
+                spawnedTile.transform.SetParent(mapLogic.transform);
                 bool isOffset = (x + z) % 2 == 1;
                 spawnedTile.Init(isOffset);
 
                 TileMap[new Vector2(x, z)] = spawnedTile;   
             }
         }
-        currentX = width;
-        currentZ = height;
+        
         CameraControls.Instance.Center(new Vector3(width/2,0,height/2));
         float distance = (((Mathf.Sqrt(width*width+height*height)) / 2) / Mathf.Tan(Camera.main.fieldOfView * (Mathf.PI/180)) / 2);
         CameraRotation.Instance.SetNewLimit(distance);
@@ -76,8 +75,13 @@ public class GridManager : MonoBehaviour
         ChangeTilesOnPath(path);
         GetTileByPosition(start).ChangeToStart();
         GetTileByPosition(end).ChangeToEnd();   
+        mapLogic.SendPath(path.ToArray());
+        mapLogic.SetMapSize(new Vector2(width, height));
     }
     public void DestroyGrid() {
+        MapLogic mapLogic = FindObjectOfType<MapLogic>();
+        int currentX = mapLogic.GetMapSize().x;
+        int currentZ = mapLogic.GetMapSize().y;
         for (int x = 0; x < currentX; x++) {
             for (int z = 0; z < currentZ; z++) {
                 if (_usePool) {
@@ -88,6 +92,7 @@ public class GridManager : MonoBehaviour
                 }
             }
         }  
+        mapLogic.CleanMap();
     }
     public Tile GetTileByPosition(Vector2 pos) {
         if (TileMap.TryGetValue(pos, out Tile tile)) {

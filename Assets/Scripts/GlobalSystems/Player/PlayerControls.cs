@@ -8,6 +8,7 @@ public class PlayerControls : MonoBehaviour
     public static PlayerControls instance;
     [SerializeField] private TowerSO selectedTower;
     [SerializeField] private LayerMask gridTileLayer;
+    [SerializeField] private EnemySO enemySO;
     private Tile _selectedTile;
     private Camera _camera;
     private MapLogic mapLogic;
@@ -52,6 +53,10 @@ public class PlayerControls : MonoBehaviour
             Vector2 coords = GridManager.Instance.GetRandomPointInGrid();
             Vector3 centerCoords = new Vector3(coords.x, 0f, coords.y);
             CameraControls.Instance.Center(centerCoords);
+        }
+
+        if (Input.GetKeyDown(KeyCode.Mouse1)) {
+            mapLogic.EnemyManager().SpawnEnemy(enemySO);
         }
     }
 }

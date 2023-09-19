@@ -11,7 +11,8 @@ public class Enemy : MonoBehaviour
     [Header("MoveParams")]
     public float _moveSpeed = 1f;
     private float speedModifier = 1f;
-    public float driftDuration = 2f;
+    public float defaultSpeed = 2f;
+    public float driftDuration;
     private List<Vector3> path;
     private int currentPathIndex = 0;
     private float driftTimer = 0f;
@@ -30,6 +31,7 @@ public class Enemy : MonoBehaviour
         _moveSpeed = enemySO.speed;
         _barrierType = enemySO.barrierType;
         _currentHP = _maxHP;
+        driftDuration = defaultSpeed / _moveSpeed;
     }
     public void SetPath(List<Vector3> newPath)
     {
