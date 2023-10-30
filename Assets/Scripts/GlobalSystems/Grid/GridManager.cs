@@ -1,7 +1,11 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.Pool;
+using UnityEngine.UI;
+using Random = UnityEngine.Random;
 
 public class GridManager : MonoBehaviour
 {
@@ -31,20 +35,16 @@ public class GridManager : MonoBehaviour
 
         GenerateGrid();
     }
-    public void SetX(string x) {
-        width = int.Parse(x);
-    }
-    public void SetY(string y) {
-        height = int.Parse(y);
-    }
-    public void SetTurns(string z) {
-        amountOfTurns = int.Parse(z);
-    }
-    public void UsePool(bool use) {
-        _usePool = use;
-    }
     public void GenerateGrid() {
+        
         MapLogic mapLogic = FindObjectOfType<MapLogic>() ? FindObjectOfType<MapLogic>() : Instantiate(gridParent);
+
+        width = int.Parse(GlobalGet.instance.getDebugControls().GetComponentByID(1).GetComponent<TMP_InputField>().text);
+        height = int.Parse(GlobalGet.instance.getDebugControls().GetComponentByID(2).GetComponent<TMP_InputField>().text);
+        amountOfTurns = int.Parse(GlobalGet.instance.getDebugControls().GetComponentByID(3).GetComponent<TMP_InputField >().text);
+        _usePool = GlobalGet.instance.getDebugControls().GetComponentByID(4).GetComponent<Toggle>().isOn;
+
+
         TileMap = new Dictionary<Vector2, Tile>();
         Vector2 start = GetRandomPointOnEdge();
         Vector2 end = new Vector2(width - 1 - start.x, height - 1 - start.y);

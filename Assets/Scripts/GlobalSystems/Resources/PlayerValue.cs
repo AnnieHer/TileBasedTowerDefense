@@ -12,13 +12,15 @@ public class PlayerValue
     [SerializeField] protected int _valueMin;
     [SerializeField] protected bool _canGoOverMax;
     [SerializeField] protected bool _canGoBelowMin;
+    [SerializeField] protected bool _snapToClosest;
     public PlayerValue( string valueName, 
                         int value, 
                         int valueDefault, 
                         int valueMax, 
                         int valueMin, 
                         bool canGoOverMax, 
-                        bool canGoBelowMin) {
+                        bool canGoBelowMin,
+                        bool snapToClosest) {
             _valueName = valueName;
             _value = value;
             _valueDefault = valueDefault;
@@ -26,14 +28,32 @@ public class PlayerValue
             _valueMin = valueMin;
             _canGoOverMax = canGoOverMax;
             _canGoBelowMin = canGoBelowMin;
+            _snapToClosest = snapToClosest;
     }
-    public void ChangeValue(int change) {
-        _value += change;
-        if (_value < _valueMin && !_canGoBelowMin) {
+    public PlayerValue(PlayerValueSO playerValueSO) {
+            _valueName = playerValueSO.valueName;
+            _value = playerValueSO.value;
+            _valueDefault = playerValueSO.valueDefault;
+            _valueMax = playerValueSO.valueMax;
+            _valueMin = playerValueSO.valueMin;
+            _canGoOverMax = playerValueSO.canGoOverMax;
+            _canGoBelowMin = playerValueSO.canGoBelowMin;
+            _snapToClosest = playerValueSO.snapToClosest;
+    }
+    public bool ChangeValue(int change) {
+        if (_value + change < _valueMin && !_canGoBelowMin) {
+            return false;
+        }
+        if (_value + change > _valueMax && !_canGoOverMax) {
+            return false;
+        }
+        if (_value + change < _valueMin && _snapToClosest) {
             _value = _valueMin;
         }
-        if (_value > _valueMax && !_canGoOverMax) {
+        if (_value + change > _valueMax && _snapToClosest) {
             _value = _valueMax;
         }
+        _value += change;
+        return true;
     }
 }
