@@ -48,3 +48,9 @@ public enum Rarity
     epic,
     legendary
 }
+public enum GameState
+{
+    pause,
+    gameOn,
+    gameOver,
+}

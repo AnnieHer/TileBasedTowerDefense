@@ -7,6 +7,7 @@ using UnityEngine.UI;
 
 public class MapLogic : MonoBehaviour
 {
+    private GameState gameState = GameState.gameOn;
     [SerializeField] private Enemy enemyPrefab;
     private Vector2[] PathArray;
     private Vector2Int mapSize;
@@ -60,7 +61,7 @@ public class MapLogic : MonoBehaviour
     }
     public void TakeDamage(int value) {
         if (playerManager.ChangeValueHealth(value)) {
-            GlobalGet.instance.getPlayerControls().GetComponentByID(1).GetComponent<TMP_Text>().text = "Dead";
+            gameState = GameState.gameOver;
         }
     }
 }

@@ -16,12 +16,27 @@ public class PlayerManager
     }
     public bool ChangeValueHealth(int value) {
         playerValue_health.ChangeValue(value);
-        GlobalGet.instance.getPlayerControls().GetComponentByID(0).GetComponent<Slider>().value = playerValue_health.GetValue();
-        GlobalGet.instance.getPlayerControls().GetComponentByID(1).GetComponent<TMP_Text>().text = $"{playerValue_health.GetValue()}";
+        _mapLogic.StartCoroutine(AnimationCoroutine(playerValue_health.GetValue()));
 
         return playerValue_health.GetValue() <= 0;
     }
     public bool ChangeValueMoney(int value) {
         return playerValue_money.ChangeValue(value);
+    }
+    IEnumerator AnimationCoroutine(int value) {
+        Slider slider = GlobalGet.instance.getPlayerControls().GetComponentByID(0).GetComponent<Slider>();
+        TMP_Text text = GlobalGet.instance.getPlayerControls().GetComponentByID(1).GetComponent<TMP_Text>();
+        Debug.Log(value);
+        while (true) {
+            yield return null;
+            slider.value = Mathf.Lerp(slider.value, value, 0.03f);
+            text.text = $"{(int)slider.value}";
+            if ((int)slider.value == value) {
+                break;
+            }
+        }
+        if (value == 0) {
+            text.text = "Dead";
+        }
     }
 }
