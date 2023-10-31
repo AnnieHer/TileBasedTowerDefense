@@ -49,11 +49,16 @@ public class PlayerValue
         }
         if (_value + change < _valueMin && _snapToClosest) {
             _value = _valueMin;
+            return true;
         }
         if (_value + change > _valueMax && _snapToClosest) {
             _value = _valueMax;
+            return true;
         }
         _value += change;
         return true;
+    }
+    public int GetValue() {
+        return _value;
     }
 }

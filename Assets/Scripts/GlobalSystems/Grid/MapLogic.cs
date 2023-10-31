@@ -1,7 +1,9 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class MapLogic : MonoBehaviour
 {
@@ -55,5 +57,10 @@ public class MapLogic : MonoBehaviour
     }
     public Vector2[] GetPath() {
         return PathArray;
+    }
+    public void TakeDamage(int value) {
+        if (playerManager.ChangeValueHealth(value)) {
+            GlobalGet.instance.getPlayerControls().GetComponentByID(1).GetComponent<TMP_Text>().text = "Dead";
+        }
     }
 }

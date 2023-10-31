@@ -46,7 +46,7 @@ public class EnemyManager
         enemyList.Add(spawnedEnemy);
         spawnedEnemy.SetPath(path);
         spawnedEnemy.OnDeath += HandleEnemyDeath;
-        spawnedEnemy.Init(enemySO);
+        spawnedEnemy.Init(enemySO, _mapLogic);
         spawnedEnemy.transform.SetParent(_mapLogic.transform);
     }
     private void HandleEnemyDeath(Enemy enemy) {

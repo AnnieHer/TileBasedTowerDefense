@@ -23,15 +23,17 @@ public class Enemy : MonoBehaviour
         private set;
     } 
     private Vector3 positionOffset;
+    private MapLogic _mapLogic;
 
     public event Action<Enemy> OnDeath;
-    public void Init(EnemySO enemySO) {
+    public void Init(EnemySO enemySO, MapLogic mapLogic) {
         _maxHP = enemySO.maxHealth;
         _barrierHP = enemySO.barrierHealth;
         _moveSpeed = enemySO.speed;
         _barrierType = enemySO.barrierType;
         _currentHP = _maxHP;
         driftDuration = defaultSpeed / _moveSpeed;
+        _mapLogic = mapLogic;
     }
     public void SetPath(List<Vector3> newPath)
     {
@@ -48,6 +50,7 @@ public class Enemy : MonoBehaviour
     {
         if (currentPathIndex >= path.Count - 1)
         {
+            _mapLogic.TakeDamage(-(int)_currentHP);
             Die();
             //Destroy(gameObject);
             // Unit has reached the end of the path or desired condition met
