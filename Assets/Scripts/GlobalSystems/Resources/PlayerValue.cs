@@ -58,6 +58,21 @@ public class PlayerValue
         _value += change;
         return true;
     }
+    public bool ValidValue(int change) {
+        if (_value + change < _valueMin && !_canGoBelowMin) {
+            return false;
+        }
+        if (_value + change > _valueMax && !_canGoOverMax) {
+            return false;
+        }
+        if (_value + change < _valueMin && _snapToClosest) {
+            return true;
+        }
+        if (_value + change > _valueMax && _snapToClosest) {
+            return true;
+        }
+        return true;
+    }
     public int GetValue() {
         return _value;
     }

@@ -44,7 +44,7 @@ public class PlayerControls : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Mouse0) && _selectedTile != null) {
             
             CameraControls.Instance.Center(_selectedTile.transform.position);
-            if (!_selectedTile.CheckOccupied()) {
+            if (!_selectedTile.CheckOccupied() && mapLogic.MoneyChange(-selectedTower.baseCost)) {
                 mapLogic.TowerManager().SpawnTower(_selectedTile.transform.position, selectedTower);
                 _selectedTile.ChangeToTower();
             }

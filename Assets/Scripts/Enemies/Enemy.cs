@@ -95,6 +95,7 @@ public class Enemy : MonoBehaviour
     }
     private void Die()
     {
+        _mapLogic.MoneyChange((int)(_maxHP - _currentHP));
         // Вызываем событие с передачей себя как параметра
 
         OnDeath?.Invoke(this);

@@ -20,6 +20,9 @@ public class ProjectileLogic : MonoBehaviour
     private void HandleEnemyDeath(Enemy enemy) {
         _attackData.targets.Remove(enemy);
         enemy.OnDeath -= HandleEnemyDeath;
+        if (_attackData.targets == null) {
+            Destroy(gameObject);
+        }
     }
     void Update()
     {

@@ -64,4 +64,7 @@ public class MapLogic : MonoBehaviour
             gameState = GameState.gameOver;
         }
     }
+    public bool MoneyChange(int cost) {
+        return playerManager.ChangeValueMoney(cost);
+    }
 }
